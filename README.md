@@ -61,3 +61,6 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Demo
+https://seer-of-human.com
