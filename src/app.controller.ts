@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
@@ -30,5 +30,10 @@ export class AppController {
     // console.log(formData['image_code']);
     // console.log(file);
     return { ...formData, file };
+  }
+
+  @Get('medias/:file_name')
+  display(@Res() res, @Param('file_name') fileName: string) {
+    res.sendFile(fileName, { root: './files' });
   }
 }
