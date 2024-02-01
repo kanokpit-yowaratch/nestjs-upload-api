@@ -47,7 +47,7 @@ const connection: TypeOrmModuleOptions = {
     TypeOrmModule.forFeature([Upload]),
     MulterModule.register(multerOptions),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'static'),
+      rootPath: join(__dirname, '..', 'files'),
     })
   ],
   controllers: [AppController],
