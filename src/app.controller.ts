@@ -44,4 +44,10 @@ export class AppController {
   display(@Res() res, @Param('file_name') fileName: string) {
     res.sendFile(fileName, { root: './files' });
   }
+
+  @Get('delete/:file_name')
+  async delete(@Param('file_name') fileName: string) {
+    const result = await this.appService.delete(fileName);
+    return { message: result };
+  }
 }
