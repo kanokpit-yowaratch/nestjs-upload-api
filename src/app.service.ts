@@ -3,6 +3,7 @@ import { UploadDto } from './dto/upload.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Upload } from './entities/upload.entity';
 import { Repository } from 'typeorm';
+import { promisify } from 'util';
 const fs = require('fs');
 const path = require('path')
 
@@ -25,8 +26,9 @@ export class AppService {
           } else {
             const newFiles = files.map(file => {
               return {
+                fileName: file,
                 url: `${fullUrl}/medias/${file}`,
-                fileName: file
+                delete: `${fullUrl}/delete/${file}`
               }
             });
             resolve(newFiles)
@@ -38,6 +40,24 @@ export class AppService {
 
   create(uploadDto: UploadDto) {
     return this.uploadRepository.save(uploadDto);
+  }
+
+  async delete(fileName: string): Promise<string> {
+    const unlinkAsync = promisify(fs.unlink);
+    try {
+      const directoryPath = path.join(__dirname, '..', 'files');
+      const checkExist = await this.isExistingDirectory(directoryPath);
+
+      if (checkExist) {
+        const fullPath = `${directoryPath}/${fileName}`;
+        await unlinkAsync(fullPath)
+        return `Delete file: ${fileName} successfully.`
+      }
+      return `Cannot delete file: ${fileName}!`;
+    } catch (error) {
+      console.log(error);
+      return `Cannot delete file: ${fileName}!`;
+    }
   }
 
   isExistingDirectory = (directory) => {
