@@ -1,10 +1,14 @@
 import { HttpException, HttpStatus, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { extname } from 'path';
 import { diskStorage } from 'multer';
 import { v4 as uuid } from 'uuid';
 import { MulterModule } from '@nestjs/platform-express';
+import { Upload } from './entities/upload.entity';
 require('dotenv').config();
 
 export const multerOptions = {
@@ -26,8 +30,26 @@ export const multerOptions = {
   }),
 };
 
+const connection: TypeOrmModuleOptions = {
+  type: 'mysql',
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  entities: ['dist/**/*.entity{.ts,.js}'],
+  synchronize: true,
+};
+
 @Module({
-  imports: [MulterModule.register(multerOptions)],
+  imports: [
+    TypeOrmModule.forRoot(connection),
+    TypeOrmModule.forFeature([Upload]),
+    MulterModule.register(multerOptions),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'static'),
+    })
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

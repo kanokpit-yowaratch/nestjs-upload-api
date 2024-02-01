@@ -23,13 +23,17 @@ export class AppController {
   })
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(
-    @Body() formData: Request,
+    // @Body() uploadDto: UploadDto, => Required all column exist in table => Not recommened, it has effect to table structure
+    @Body() formData: Request, // Not need all column
     @UploadedFile() file: Express.Multer.File
   ) {
-    // console.log(formData);
-    // console.log(formData['image_code']);
-    // console.log(file);
-    return { ...formData, file };
+    const fileName = file?.filename || '';
+    const uploadDto = new UploadDto()
+    uploadDto.source = formData['source'];
+    // check dup (dup => aut oupdate, no dup => add new)
+    uploadDto.image_code = formData['image_code'];
+    uploadDto.file_name = fileName;
+    return this.appService.create(uploadDto);
   }
 
   @Get('medias/:file_name')

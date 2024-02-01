@@ -8,9 +8,21 @@ export class UploadDto {
   image_code: string;
 
   @ApiProperty({
+    example: 'client-A',
+    required: false
+  })
+  source: string;
+
+  @ApiProperty({
+    example: 'product-a.jpg',
+    required: false
+  })
+  file_name: string;
+
+  @ApiProperty({
     example: {
       fieldname: 'file',
-      originalname: 'cover.jpg',
+      originalname: 'product-a.jpg',
       encoding: '7bit',
       mimetype: 'image/jpeg',
       destination: 'files/',
@@ -21,4 +33,10 @@ export class UploadDto {
     required: true
   })
   file: Express.Multer.File;
+
+  @ApiProperty({
+    example: '1',
+    required: false
+  })
+  active_status: number = 1;
 }
