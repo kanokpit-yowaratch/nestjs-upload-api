@@ -1,17 +1,21 @@
-import { Body, Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { UploadDto } from './dto/upload.dto';
+import { Request as URLRequest } from "express";
 
 @ApiTags('Upload')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) { }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('/medias')
+  async getHello(@Req() req: URLRequest) {
+    const protocol = req.protocol;
+    const host = req.get("Host");
+    const fullUrl = `${protocol}://${host}`;
+    return await this.appService.list(fullUrl);
   }
 
   @Post('/upload')
