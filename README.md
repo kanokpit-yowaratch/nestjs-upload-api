@@ -33,6 +33,11 @@ Create .env file and set variables
 
 ```bash
 API_PORT=4000
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=
+DB_PASSWORD=
+DB_DATABASE=
 ```
 
 
@@ -60,6 +65,20 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
+```
+
+## DB Structure Example
+
+```
+CREATE TABLE `medias` (
+	`image_code` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`source` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`file_name` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`active_status` INT(10) NOT NULL,
+	PRIMARY KEY (`image_code`) USING BTREE
+)
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB;
 ```
 
 ## Demo
