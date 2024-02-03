@@ -1,13 +1,11 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
-@Entity('medias')
+@Entity('medias') // Custom table name
 export class Upload {
-  // Optional: Auto gen with call API first
   @PrimaryColumn()
   image_code: string;
 
-  // product-master
   @Column()
   @Exclude() // not require
   source: string;
