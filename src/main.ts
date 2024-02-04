@@ -5,17 +5,17 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
-  // add multiple origins here
-  // origin: [
-  //   "http://localhost:3000/",
-  //   "http://localhost:3333/",
-  //   "https://nextjs-upload-file-gules.vercel.app/",
-  // ],
+  app.enableCors({
+    // add multiple origins here
+    origin: [
+      "http://localhost:3000/",
+      "http://localhost:3333/",
+      "https://nextjs-upload-file-gules.vercel.app/",
+    ],
 
-  // Allow all origin
-  // origin: '*',
-  // });
+    // Allow all origin
+    // origin: '*',
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
