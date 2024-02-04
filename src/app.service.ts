@@ -80,4 +80,8 @@ export class AppService {
       });
     });
   };
+
+  isDuplicateCode(imageCode: string): Promise<Upload> {
+    return this.uploadRepository.findOne({ where: { image_code: imageCode } });
+  }
 }

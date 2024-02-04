@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
@@ -26,16 +26,26 @@ export class AppController {
     description: 'Json structure for upload object',
   })
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(
+  async uploadFile(
     // @Body() uploadDto: UploadDto, => Required all column exist in table => Not recommened, it has effect to table structure
     @Body() formData: Request, // Not need all column
     @UploadedFile() file: Express.Multer.File
   ) {
-    const fileName = file?.filename || '';
+    const fileName = file?.filename;
+    if (!fileName) {
+      throw new BadRequestException('Please select any file.');
+    }
+
+    const imageCode = formData['image_code'] || '';
+    const isDup = await this.appService.isDuplicateCode(imageCode);
+
+    if (isDup) {
+      throw new BadRequestException('Duplicate image code.');
+    }
+
     const uploadDto = new UploadDto()
-    uploadDto.source = formData['source'];
-    // check dup (dup => aut oupdate, no dup => add new)
-    uploadDto.image_code = formData['image_code'];
+    uploadDto.source = formData['source'] || '';
+    uploadDto.image_code = imageCode;
     uploadDto.file_name = fileName;
     return this.appService.create(uploadDto);
   }
