@@ -9,10 +9,10 @@ async function bootstrap() {
     // origin: [
     //   "http://localhost:3000/",
     //   "http://localhost:3333/",
-    //   "https://nextjs-upload-file-jwpfurcdo-noi-vinsmokes-projects.vercel.app/",
+    //   "https://nextjs-upload-file-gules.vercel.app/",
     // ],
     // Allow all origin
-    origin: true,
+    origin: '*',
   });
 
   const config = new DocumentBuilder()
