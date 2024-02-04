@@ -4,7 +4,16 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  app.enableCors({
+    // add multiple origins here
+    // origin: [
+    //   "http://localhost:3000/",
+    //   "http://localhost:3333/",
+    //   "https://nextjs-upload-file-jwpfurcdo-noi-vinsmokes-projects.vercel.app/",
+    // ],
+    // Allow all origin
+    origin: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Upload example')
