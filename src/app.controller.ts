@@ -60,4 +60,30 @@ export class AppController {
     const result = await this.appService.delete(fileName);
     return { message: result };
   }
+
+  @Post('/hee')
+  // @UseInterceptors(FileInterceptor('file'))
+  async hee(
+    // @Body() uploadDto: UploadDto, => Required all column exist in table => Not recommened, it has effect to table structure
+    @Body() formData: Request, // Not need all column
+    // @UploadedFile() file: Express.Multer.File
+  ) {
+    // const fileName = file?.filename;
+    // if (!fileName) {
+    //   throw new BadRequestException('Please select any file.');
+    // }
+
+    const imageCode = formData['image_code'] || '';
+    const isDup = await this.appService.isDuplicateCode(imageCode);
+
+    if (isDup) {
+      throw new BadRequestException('Duplicate image code.');
+    }
+
+    const uploadDto = new UploadDto()
+    uploadDto.source = formData['source'] || '';
+    uploadDto.image_code = imageCode;
+    // uploadDto.file_name = fileName;
+    return formData; // this.appService.create(uploadDto);
+  }
 }
