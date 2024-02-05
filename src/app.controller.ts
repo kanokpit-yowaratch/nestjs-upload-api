@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
@@ -56,7 +56,7 @@ export class AppController {
     res.sendFile(fileName, { root: './files' });
   }
 
-  @Get('delete/:file_name')
+  @Delete('delete/:file_name')
   async delete(@Param('file_name') fileName: string) {
     const result = await this.appService.delete(fileName);
     return { message: result };
