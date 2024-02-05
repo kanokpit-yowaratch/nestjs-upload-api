@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
@@ -33,14 +33,14 @@ export class AppController {
   ) {
     const fileName = file?.filename;
     if (!fileName) {
-      throw new BadRequestException('Please select any file.');
+      throw new HttpException('Please select any file.', HttpStatus.BAD_REQUEST);
     }
 
     const imageCode = formData['image_code'] || '';
     const isDup = await this.appService.isDuplicateCode(imageCode);
 
     if (isDup) {
-      throw new BadRequestException('Duplicate image code.');
+      throw new HttpException('Duplicate image code.', HttpStatus.BAD_REQUEST);
     }
 
     const uploadDto = new UploadDto()
