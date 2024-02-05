@@ -47,6 +47,7 @@ export class AppController {
     uploadDto.source = formData['source'] || '';
     uploadDto.image_code = imageCode;
     uploadDto.file_name = fileName;
+    uploadDto.active_status = formData['active_status'] || 1;
     return this.appService.create(uploadDto);
   }
 

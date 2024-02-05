@@ -17,17 +17,6 @@ async function bootstrap() {
   // origin: '*',
   // });
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-      forbidNonWhitelisted: true,
-      // whitelist: true,
-    }),
-  );
-
   const config = new DocumentBuilder()
     .setTitle('Upload example')
     .setDescription('The Upload API description')
