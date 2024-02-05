@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { UploadDto } from './dto/upload.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Upload } from './entities/upload.entity';
@@ -38,8 +38,20 @@ export class AppService {
     }
   }
 
-  create(uploadDto: UploadDto) {
-    return this.uploadRepository.save(uploadDto);
+  async create(uploadDto: UploadDto) {
+    return this.uploadRepository.save(uploadDto).catch((error: any) => {
+      switch (error.name) {
+        case 'QueryFailedError':
+          throw new HttpException({
+            status: `${error.errno}: ${error.code}`,
+            error: error.message,
+          }, error.status, {
+            cause: error.message
+          });
+        default:
+          throw error;
+      }
+    });
   }
 
   async delete(fileName: string): Promise<string> {

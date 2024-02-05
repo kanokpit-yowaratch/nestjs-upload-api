@@ -38,5 +38,5 @@ export class UploadDto {
     example: '1',
     required: false
   })
-  active_status: number = 1;
+  active_status: number;
 }
