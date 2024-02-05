@@ -76,13 +76,16 @@ $ npm run test:cov
 $ npm run build
 
 # pm2 to start api service
+# first time
 $ pm2 start dist/main.js --name "upload-api"
+# next time
+$ pm2 restart upload-api
 ```
 
 
 ## DB Structure Example
 
-```
+```bash
 CREATE TABLE `medias` (
 	`image_code` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_unicode_ci',
 	`source` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_unicode_ci',
@@ -98,11 +101,13 @@ ENGINE=InnoDB;
 
 CASE: always show 500 Internal Server Error
 
-May be can't access to upload directory, so:
+May be can't access to upload directory, run:
 
-```
-sudo chown -R [owner user] [project]
+```bash
+$ sudo chown -R [current_user] [project]
 ```
 
 ## Demo
 https://seer-of-human.com
+
+Client app that support this api: https://nextjs-upload-file-gules.vercel.app
