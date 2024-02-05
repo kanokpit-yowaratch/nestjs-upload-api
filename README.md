@@ -32,7 +32,7 @@ Add `require('dotenv').config();` in app.module.ts
 Create .env file and set variables
 
 ```bash
-API_PORT=4000
+API_PORT=[YOUR_PORT]
 DB_HOST=localhost
 DB_PORT=3306
 DB_USERNAME=
@@ -67,6 +67,19 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+
+## PM2 command
+
+
+```bash
+# build to create dist/main.js
+$ npm run build
+
+# pm2 to start api service
+$ pm2 start dist/main.js --name "upload-api"
+```
+
+
 ## DB Structure Example
 
 ```
@@ -79,6 +92,16 @@ CREATE TABLE `medias` (
 )
 COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB;
+```
+
+## Important config on NGINX
+
+CASE: always show 500 Internal Server Error
+
+May be can't access to upload directory, so:
+
+```
+sudo chown -R [owner user] [project]
 ```
 
 ## Demo
