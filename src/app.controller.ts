@@ -12,10 +12,10 @@ export class AppController {
 
   @Get('/medias')
   async getHello(@Req() req: URLRequest) {
-    const protocol = req.protocol;
-    const host = req.get("Host");
-    const fullUrl = `${protocol}://${host}`;
-    return await this.appService.list(fullUrl);
+    // const protocol = req.protocol;
+    // const host = req.get("Host");
+    // const fullUrl = `${protocol}://${host}`;
+    return await this.appService.fileList();
   }
 
   @Post('/upload')
@@ -59,6 +59,10 @@ export class AppController {
   @Delete('delete/:file_name')
   async delete(@Param('file_name') fileName: string) {
     const result = await this.appService.delete(fileName);
+    const media = await this.appService.findCodeByFileName(fileName);
+    if (media && media.image_code) {
+      await this.appService.remove(media.image_code);
+    }
     return { message: result };
   }
 }

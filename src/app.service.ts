@@ -14,7 +14,7 @@ export class AppService {
     private uploadRepository: Repository<Upload>,
   ) { }
 
-  async list(fullUrl: string): Promise<any[]> {
+  async fileList(): Promise<any[]> {
     const directoryPath = path.join(__dirname, '..', 'files');
     const checkExist = await this.isExistingDirectory(directoryPath);
 
@@ -27,8 +27,7 @@ export class AppService {
             const newFiles = files.map(file => {
               return {
                 fileName: file,
-                url: `${fullUrl}/medias/${file}`,
-                delete: `${fullUrl}/delete/${file}`
+                path: `/medias/${file}`
               }
             });
             resolve(newFiles)
@@ -74,6 +73,12 @@ export class AppService {
     }
   }
 
+  async remove(image_code: string): Promise<void> {
+    await this.uploadRepository.delete(image_code).catch((error: any) => {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    })
+  }
+
   isExistingDirectory = (directory) => {
     return new Promise((resolve, reject) => {
       if (fs.existsSync(directory)) {
@@ -97,5 +102,9 @@ export class AppService {
 
   isDuplicateCode(imageCode: string): Promise<Upload> {
     return this.uploadRepository.findOne({ where: { image_code: imageCode } });
+  }
+
+  findCodeByFileName(fileName: string): Promise<Upload> {
+    return this.uploadRepository.findOne({ where: { file_name: fileName } });
   }
 }
