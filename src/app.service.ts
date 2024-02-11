@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Upload } from './entities/upload.entity';
 import { Repository } from 'typeorm';
 import { promisify } from 'util';
+import { FileProperty } from './file.interface';
 const fs = require('fs');
 const path = require('path')
 
@@ -14,7 +15,7 @@ export class AppService {
     private uploadRepository: Repository<Upload>,
   ) { }
 
-  async fileList(): Promise<any[]> {
+  async fileList(): Promise<FileProperty[]> {
     const directoryPath = path.join(__dirname, '..', 'files');
     const checkExist = await this.isExistingDirectory(directoryPath);
 
@@ -24,16 +25,38 @@ export class AppService {
           if (err) {
             resolve([])
           } else {
-            const newFiles = files.map(file => {
-              return {
+            const newFiles = files.map((file: string) => {
+              const returnObject = {
                 fileName: file,
-                path: `/medias/${file}`
-              }
+                path: `/medias/${file}`,
+                imageCode: ''
+              };
+              return returnObject
             });
             resolve(newFiles)
           }
         })
       })
+    }
+  }
+
+  async fetchAllData(files: FileProperty[]) {
+    return Promise.all(files.map(async (fileData: FileProperty) => {
+      fileData.imageCode = await this.fileListWithCode(fileData.fileName)
+      return fileData
+    }));
+  }
+
+  async fileListWithCode(fileName: string): Promise<string> {
+    let imageCode = '';
+    try {
+      const fileData = await this.uploadRepository.findOneOrFail({ where: { file_name: fileName } })
+      if (fileData) {
+        imageCode = fileData.image_code
+      }
+      return imageCode;
+    } catch (error) {
+      return imageCode;
     }
   }
 
