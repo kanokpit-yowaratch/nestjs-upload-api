@@ -30,11 +30,13 @@ export class AppController {
   constructor(private readonly appService: AppService) { }
 
   @Get('/medias')
-  async getHello(@Req() req: URLRequest) {
+  async getMedias() { // @Req() req: URLRequest
     // const protocol = req.protocol;
     // const host = req.get("Host");
     // const fullUrl = `${protocol}://${host}`;
-    return await this.appService.fileList();
+    const files = await this.appService.fileList();
+    const fileWithCodeList = await this.appService.fetchAllData(files);
+    return fileWithCodeList;
   }
 
   @Post('/upload')
@@ -85,9 +87,12 @@ export class AppController {
       throw new HttpException('Please select any file.', HttpStatus.BAD_REQUEST);
     }
 
-    const imageCode = formData['image_code'] || '';
-    const isDup = await this.appService.isDuplicateCode(imageCode);
+    let imageCode = formData['image_code'] || '';
+    if (!imageCode) {
+      imageCode = fileName.split('.')[0]
+    }
 
+    const isDup = await this.appService.isDuplicateCode(imageCode);
     if (isDup) {
       // remove file upload previously
       throw new HttpException('Duplicate image code.', HttpStatus.BAD_REQUEST);
