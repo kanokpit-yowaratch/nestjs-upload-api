@@ -9,7 +9,7 @@ async function bootstrap() {
   app.enableCors();
   // add multiple origins here
   // origin: [
-  //   "http://localhost:3000/",
+  //   "http://localhost:5000/",
   //   "http://localhost:3333/",
   //   "https://nextjs-upload-file-gules.vercel.app/",
   // ],
@@ -24,7 +24,7 @@ async function bootstrap() {
     .setTitle('Upload example')
     .setDescription('The Upload API description')
     .setVersion('1.0')
-    .addServer('http://localhost:3000/', 'Local environment')
+    .addServer('http://localhost:5000/', 'Local environment')
     .addServer('http://localhost:4444/', 'Local environment')
     .addServer('https://seer-of-human.com/', 'Production')
     .addTag('Upload')
