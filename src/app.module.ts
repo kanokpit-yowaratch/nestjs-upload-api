@@ -13,7 +13,7 @@ require('dotenv').config();
 
 export const multerOptions = {
   limits: {
-    fileSize: 1024 * 1024 * 2, // Not over than 2Mb
+    fileSize: 1024 * 1024 * 1, // Not over than 1Mb
   },
   fileFilter: (req: any, file: any, cb: any) => {
     if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {

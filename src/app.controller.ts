@@ -3,26 +3,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { UploadDto } from './dto/upload.dto';
-import { Request as URLRequest } from "express";
-import { diskStorage } from 'multer';
-import { extname } from 'path';
-
-export const editFileName = (req, file, callback) => {
-  const name = file.originalname.split('.')[0];
-  const fileExtName = extname(file.originalname);
-  const randomName = Array(4)
-    .fill(null)
-    .map(() => Math.round(Math.random() * 16).toString(16))
-    .join('');
-  callback(null, `${name}-${randomName}${fileExtName}`);
-};
-
-export const imageFileFilter = (req, file, callback) => {
-  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-    return callback(new Error('Only image files are allowed!'), false);
-  }
-  callback(null, true);
-};
+import { Request } from "express";
+// import { diskStorage } from 'multer';
+// import { extname } from 'path';
 
 @ApiTags('Upload')
 @Controller()
@@ -46,23 +29,13 @@ export class AppController {
     type: UploadDto,
     description: 'Json structure for upload object',
   })
-  // @UseInterceptors(FileInterceptor('file'))
-   // Try this
-  @UseInterceptors(FileInterceptor('image', {
-    storage: diskStorage({
-      destination: './files',
-      filename: editFileName,
-    }),
-    fileFilter: imageFileFilter,
-  }))
-  // Alternative
+  @UseInterceptors(FileInterceptor('file'))
+  // Works!
   // @UseInterceptors(FileInterceptor('file', {
   //   storage: diskStorage({
-  //     destination: './uploads'
-  //     , filename: (req, file, cb) => {
-  //       // Generating a 32 random chars long string
+  //     destination: './files',
+  //     filename: (req: Request, file, cb) => {
   //       const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
-  //       //Calling the callback passing the random name generated with the original extension name
   //       cb(null, `${randomName}${extname(file.originalname)}`)
   //     }
   //   })
@@ -73,8 +46,7 @@ export class AppController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [
-          new MaxFileSizeValidator({ maxSize: 2000 }),
-          // new FileTypeValidator({ fileType: 'image/jpeg' }),
+          new MaxFileSizeValidator({ maxSize: (1024 * 1024 * 1) }), // Not over than 1MB
           new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' })
         ],
         fileIsRequired: false,
